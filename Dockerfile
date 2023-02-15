@@ -27,6 +27,13 @@ RUN rake install
 # web interface
 RUN gem install oxidized-web --no-ri --no-rdoc
 
+# Juniper Netowrks Customizations
+RUN gem install oxidized-script
+RUN apt-get -yq update \
+    && apt-get -yq --no-install-recommends install sshpass \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # clean up
 WORKDIR /
 RUN rm -rf /tmp/oxidized

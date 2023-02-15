@@ -135,10 +135,17 @@ module Oxidized
       Oxidized.logger.debug "AUTH METHODS::#{auth_methods}"
 
       if (proxy_host = vars(:ssh_proxy))
-        proxy_command =  "ssh "
+        proxy_command = ""
+        if (proxy_password = vars(:ssh_proxy_password))
+          proxy_command += "sshpass -p #{proxy_password} "
+        end
+        proxy_command +=  "ssh "
         proxy_command += "-o StrictHostKeyChecking=no " unless secure
         if (proxy_port = vars(:ssh_proxy_port))
           proxy_command += "-p #{proxy_port} "
+        end
+        if (proxy_username = vars(:ssh_proxy_username))
+          proxy_command += "#{proxy_username}@"
         end
         proxy_command += "#{proxy_host} -W [%h]:%p"
         proxy = Net::SSH::Proxy::Command.new(proxy_command)
